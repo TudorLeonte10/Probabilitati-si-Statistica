@@ -56,68 +56,56 @@ k0 <- PoissonK0(lambda)
 print(k0)
 
 #A2 a)
-citeste_si_calculeaza_medii <- function(fisier) {
-  data <- read.table(fisier, header = TRUE)
+Functie_a=function(fisier)
+{
   
-  echantion_P <- data$P
-  echantion_S <- data$S
+  date=read.csv(fisier)
   
-  frecvente_absolute_P <- table(echantion_P)
-  frecvente_absolute_P_vector <- as.vector(frecvente_absolute_P)
+  esantion1=date$P
+  esantion2=date$S
   
-  frecvente_relative_P <- prop.table(frecvente_absolute_P)
-  frecvente_relative_P_vector <- as.vector(frecvente_relative_P)
   
-  frecvente_absolute_S <- table(echantion_S)
-  frecvente_absolute_S_vector <- as.vector(frecvente_absolute_S)
+  frec_abs1=as.vector(table(esantion1))
+  frec_abs2=as.vector(table(esantion2))
   
-  frecvente_relative_S <- prop.table(frecvente_absolute_S)
-  frecvente_relative_S_vector <- as.vector(frecvente_relative_S)
+  frec_rel1=as.vector(table(esantion1)/length(esantion1))
+  frec_rel2=as.vector(table(esantion2)/length(esantion2))
   
-  media_echantion_P <- mean(echantion_P)
-  media_echantion_S <- mean(echantion_S)
+  media1=mean(esantion1)
+  media2=mean(esantion2)
   
-  rezultate <- list(
-    frecvente_absolute_P = frecvente_absolute_P_vector,
-    frecvente_relative_P = frecvente_relative_P_vector,
-    frecvente_absolute_S = frecvente_absolute_S_vector,
-    frecvente_relative_S = frecvente_relative_S_vector,
-    media_echantion_P = media_echantion_P,
-    media_echantion_S = media_echantion_S
-  )
+  print("Frecvente absolute esantion1:")
+  print(frec_abs1)
+  print("Frecvente absolute esantion2:")
+  print(frec_abs2)
+  print("Frecvente relative esantion1:")
+  print(frec_rel1)
+  print("Frecvente relative esantion2:")
+  print(frec_rel2)
+  print("Media esantion1:")
+  print(media1)
+  print("Media esantion2:")
+  print(media2)
   
-  return(rezultate)
 }
-
-rezultate <- citeste_si_calculeaza_medii("note_PS.txt")
-print(rezultate)
+Functie_a("note_PS.csv")
 
 #A2 b)
-elimina_valori_aberante_si_grafic <- function(nume_fisier, nume_esantion) {
-  data <- read.table(nume_fisier, header = TRUE)
+Functie_b=function(fisier,esantion3)
+{
+  date=read.csv(fisier,header=TRUE)
   
-  esantion <- data[[nume_esantion]]
+  esantion=date[[esantion3]]
   
-  Q1 <- quantile(esantion, 0.25)
-  Q3 <- quantile(esantion, 0.75)
-  IQR <- Q3 - Q1
+  q1=quantile(esantion,0.25)
+  q3=quantile(esantion,0.75)
+  iqr=q3-q1
   
-  limita_inferioara <- Q1 - 1.5 * IQR
-  limita_superioara <- Q3 + 1.5 * IQR
+  lim_inf=q1-1.5*iqr
+  lim_sup=q3+1.5*iqr
   
-  valori_aberante <- esantion[esantion < limita_inferioara | esantion > limita_superioara]
+  newesantion=esantion[esantion>=lim_inf & esantion<=lim_sup]
+  hist(newesantion,breaks=seq(1,10,by=1),xlab=esantion3,ylab="Frecventa")
   
-  esantion_curatat <- esantion[esantion >= limita_inferioara & esantion <= limita_superioara]
-  
-  intervale <- cut(esantion_curatat, breaks = 1:10, include.lowest = TRUE, right = TRUE)
-  distributie_frecvente <- table(intervale)
-  
-  barplot(distributie_frecvente, main = paste("Distribuția Frecvențelor după Eliminarea Valorilor Aberante\n", nume_esantion),
-          xlab = "Intervale", ylab = "Frecvență", col = "skyblue")
-  
-  return(esantion_curatat)
 }
-
-# Exemplu de utilizare a funcției
-esantion_curatat_P <- elimina_valori_aberante_si_grafic("note_PS.txt", "P")
-esantion_curatat_S <- elimina_valori_aberante_si_grafic("note_PS.txt", "S")
+Functie_b("note_PS.csv","P")
