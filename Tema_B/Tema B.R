@@ -1,33 +1,47 @@
 #B1
 
+monte_carlo_torus_volume <- function(R, r, num_samples) {
+  count_inside <- 0
+  
+  for (i in 1:num_samples) {
+    x1 <- runif(1, -R-r, R+r)
+    x2 <- runif(1, -R-r, R+r)
+    x3 <- runif(1, -r, r)
+    
+    if (x3^2 + (sqrt(x1^2 + x2^2) - R)^2 <= r^2) {
+      count_inside <- count_inside + 1
+    }
+  }
+  
+  volume_cube <- (2*(R+r))^2 * (2*r)
+  P <- count_inside / num_samples
+  volume_torus <- volume_cube * P
+  
+  return(volume_torus)
+}
+
 R <- 10
 r <- 3
-V_paralelipiped <- (2 * R) * (2 * R) * (2 * r)
-V_exact <- 2 * pi^2 * R * r^2
+volum_exact <- 2 * pi^2 * R * r^2
 
-mc <- function(R, r, num_points) {
-  x1 <- runif(num_points, -R, R)
-  x2 <- runif(num_points, -R, R)
-  x3 <- runif(num_points, -r, r)
-  
-  distances <- sqrt(x1^2 + x2^2) - R
-  interior <- sum(x3^2 + distances^2 < r^2)
-  V_estimat <- V_paralelipiped * (interior / num_points)
-  return(V_estimat)
-}
+sample_sizes <- c(10000, 20000, 50000)
 
-esantioane <- c(10000, 20000, 50000)
-results <- data.frame(SampleSize = esantioane, EstimatedVolume = NA, RelativeError = NA)
+set.seed(123)  
 
-for (i in 1:length(esantioane)) {
-  num_points <- esantioane[i]
-  V_estimat <- mc(R, r, num_points)
-  eroare_rel <- abs(V_estimat - V_exact) / V_exact
-  results$EstimatedVolume[i] <- V_estimat
-  results$RelativeError[i] <- eroare_rel
-}
+results <- sapply(sample_sizes, function(n) {
+  volum_estimare <- monte_carlo_torus_volume(R, r, n)
+  eroare_relativa <- abs(volum_estimare - volum_exact) / volum_exact
+  c(volum_estimare, eroare_relativa)
+})
+
+results <- t(results)
+colnames(results) <- c("Volum Estimat", "Eroare Relativa")
+rownames(results) <- sample_sizes
 
 print(results)
+
+cat("Volumul exact al torului este:", volum_exact, "\n")
+
 
 # B2
 in_triunghi <- function(x, y) {
