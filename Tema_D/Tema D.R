@@ -34,8 +34,8 @@ results
 data <- read.csv("statistica.csv", skip = 1, header = FALSE)
 
 data$V1 <- as.numeric(data$V1)
-sample_mean <- mean(data$V1, na.rm = TRUE)  # Ignorăm valorile NA
-n <- length(na.omit(data$V1))  # Numărăm doar valorile non-NA
+sample_mean <- mean(data$V1, na.rm = TRUE) 
+n <- length(na.omit(data$V1))  
 
 se <- sd(data$V1) / sqrt(n) 
 alpha_95 <- 0.05
