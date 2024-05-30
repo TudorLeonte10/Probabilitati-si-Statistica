@@ -106,6 +106,6 @@ Functie_b=function(fisier,esantion3)
   
   newesantion=esantion[esantion>=lim_inf & esantion<=lim_sup]
   hist(newesantion,breaks=seq(1,10,by=1),xlab=esantion3,ylab="Frecventa")
-  
+  cat("Eșantionul curățat:", newesantion, "\n")
 }
 Functie_b("note_PS.csv","P")
